@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Cuenca</title>
+    <meta name="description" content="Cuenca is a river and watershed geography game. Know a river by its shape, place its basin on the globe, name the cities along it." />
+    <meta name="theme-color" content="#1f6fa8" />
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  </head>
+  <body>
+    <div id="app">
+      <header class="topbar">
+        <a class="brand" href="./" id="brand">
+          <svg class="logo" viewBox="0 0 32 32" aria-hidden="true">
+            <circle cx="16" cy="16" r="15" />
+            <path d="M16 29V19M16 19L9 11M16 19L23 9M9 11L5 9M9 11L9 5M23 9L27 6M23 9L20 4M16 19L18 13" />
+          </svg>
+          <span>Cuenca</span>
+        </a>
+        <div class="hud" id="hud" hidden>
+          <span id="hud-round"></span>
+          <span class="hud-score"><span data-i18n="score"></span> <b id="hud-score">0</b></span>
+        </div>
+        <button id="lang-toggle" class="chip" type="button"></button>
+      </header>
+
+      <main class="stage">
+        <div id="map" class="map" aria-label="Globe"></div>
+
+        <section id="home" class="screen home">
+          <div class="card home-card">
+            <h1>Cuenca</h1>
+            <p class="tagline" data-i18n="tagline"></p>
+            <p class="intro" data-i18n="intro"></p>
+            <button id="play" class="btn primary big" type="button" disabled></button>
+            <p class="status" id="status" data-i18n="loading"></p>
+            <h2 class="eyebrow" data-i18n="practice"></h2>
+            <div class="modes">
+              <button class="mode" type="button" data-mode="planform" disabled>
+                <b data-i18n="mode.planform"></b><span data-i18n="modeHint.planform"></span>
+              </button>
+              <button class="mode" type="button" data-mode="basin" disabled>
+                <b data-i18n="mode.basin"></b><span data-i18n="modeHint.basin"></span>
+              </button>
+              <button class="mode" type="button" data-mode="cities" disabled>
+                <b data-i18n="mode.cities"></b><span data-i18n="modeHint.cities"></span>
+              </button>
+            </div>
+            <p class="synthetic" id="synthetic" data-i18n="synthetic" hidden></p>
+          </div>
+        </section>
+
+        <aside id="panel" class="panel" hidden>
+          <div class="timer" aria-hidden="true"><div class="timer-fill" id="timer-fill"></div></div>
+          <div class="panel-body">
+            <p class="eyebrow"><span id="round-label"></span><span class="secs" id="timer-secs"></span></p>
+            <h2 id="prompt"></h2>
+            <p class="help" id="help"></p>
+            <div id="round-stage" class="round-stage"></div>
+            <p id="feedback" class="feedback" aria-live="polite"></p>
+            <div class="actions">
+              <button id="primary" class="btn primary" type="button"></button>
+            </div>
+          </div>
+        </aside>
+
+        <section id="results" class="screen results" hidden>
+          <div class="card results-card">
+            <p class="eyebrow" data-i18n="final"></p>
+            <p class="total"><b id="total"></b> <span id="out-of"></span></p>
+            <ol id="breakdown" class="breakdown"></ol>
+            <div class="row">
+              <button id="share" class="btn" type="button" data-i18n="share"></button>
+              <button id="again" class="btn primary" type="button" data-i18n="again"></button>
+            </div>
+            <button id="to-home" class="link" type="button" data-i18n="home"></button>
+            <p id="share-note" class="feedback" aria-live="polite"></p>
+          </div>
+        </section>
+      </main>
+
+      <footer class="credits"><span data-i18n="attribution"></span></footer>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
