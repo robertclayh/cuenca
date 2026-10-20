@@ -41,6 +41,8 @@ GEONAMES_COLS = [
     "admin3", "admin4", "population", "elevation", "dem", "timezone", "modified",
 ]
 SKIP_FEATURE_CODES = {"PPLX", "PPLH", "PPLW", "PPLQ", "PPLCH"}
+DISTRICT_KM = 8
+DISTRICT_ADMIN_KM = 30
 EARTH_RADIUS_KM = 6371.0088
 
 ATTRIBUTION = {
@@ -350,6 +352,15 @@ def area_and_centroid(geom):
 
 # ---------------------------------------------------------------- cities
 
+def same_urban_area(big, small):
+    """Districts sit close to their city, or share its second-level admin unit."""
+    if big["country_code"] != small["country_code"]:
+        return False
+    km = haversine_km(big["lon"], big["lat"], small["lon"], small["lat"])
+    same_admin = big["admin2"] and (big["admin1"], big["admin2"]) == (small["admin1"], small["admin2"])
+    return km < DISTRICT_KM or (same_admin and km < DISTRICT_ADMIN_KM)
+
+
 def cities_along(cities, line, buffer_km, limit):
     minx, miny, maxx, maxy = line.bounds
     pad = buffer_km / 111.2
@@ -362,8 +373,14 @@ def cities_along(cities, line, buffer_km, limit):
         if km <= buffer_km:
             picked.append((row, km))
     picked.sort(key=lambda rk: -rk[0]["pop"])
+    # GeoNames lists city districts (Paris arrondissements, London boroughs)
+    # as places of their own; keep only the largest place in each urban area
+    kept = []
+    for row, km in picked:
+        if not any(same_urban_area(k, row) for k, _ in kept):
+            kept.append((row, km))
     out = []
-    for row, km in picked[:limit]:
+    for row, km in kept[:limit]:
         out.append({
             "id": int(row["geonameid"]),
             "name": row["name"],

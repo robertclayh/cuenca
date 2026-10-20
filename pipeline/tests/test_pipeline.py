@@ -92,3 +92,15 @@ def test_fold_matches_client_rules():
     assert build_data.fold("Köln-Ehrenfeld") == "koln ehrenfeld"
     assert build_data.fold("  St. John's ") == "st john s"
     assert build_data.fold("Straße") == "strasse"
+
+
+def test_city_districts_fold_into_their_city():
+    def place(lon, lat, cc="FR", admin1="11", admin2="75"):
+        return {"lon": lon, "lat": lat, "country_code": cc, "admin1": admin1, "admin2": admin2}
+
+    paris = place(2.35, 48.86)
+    assert build_data.same_urban_area(paris, place(2.30, 48.84))  # arrondissement, 4 km
+    assert build_data.same_urban_area(paris, place(2.35, 48.68))  # same admin2, 20 km
+    assert not build_data.same_urban_area(paris, place(2.35, 48.68, admin2="91"))
+    assert not build_data.same_urban_area(paris, place(2.36, 48.87, cc="BE"))  # across a border
+    assert not build_data.same_urban_area(place(2.35, 48.86, admin2=""), place(2.35, 48.68, admin2=""))
