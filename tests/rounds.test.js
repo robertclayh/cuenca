@@ -86,7 +86,8 @@ describe('buildGame', () => {
 
 const built = new URL('../public/data/rivers.json', import.meta.url);
 describe.runIf(existsSync(built))('built dataset', () => {
-  const data = JSON.parse(readFileSync(built, 'utf8'));
+  // a skipped describe still runs its body, so only read the file when present
+  const data = existsSync(built) ? JSON.parse(readFileSync(built, 'utf8')) : { rivers: [] };
   it('can host a full game in every mode', () => {
     for (const mode of ['mix', ...MODES]) {
       const game = buildGame(data.rivers, 'data-check', mode);
